@@ -18,9 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.example.easyquran.domain.Chapter
-import com.example.easyquran.ui.chapters.models.ChapterUI
-import com.example.easyquran.ui.chapters.models.toChapterUI
+import com.example.easyquran.model.domain.Chapter
 import com.example.easyquran.ui.theme.EasyQuranTheme
 
 @Composable

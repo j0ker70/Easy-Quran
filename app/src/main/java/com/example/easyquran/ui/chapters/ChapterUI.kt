@@ -1,8 +1,8 @@
-package com.example.easyquran.ui.chapters.models
+package com.example.easyquran.ui.chapters
 
 import androidx.annotation.DrawableRes
 import com.example.easyquran.R
-import com.example.easyquran.domain.Chapter
+import com.example.easyquran.model.domain.Chapter
 
 data class ChapterUI(
     val id: String,
