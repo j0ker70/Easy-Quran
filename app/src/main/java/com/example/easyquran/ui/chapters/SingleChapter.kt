@@ -14,8 +14,8 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.easyquran.model.domain.Chapter
@@ -33,9 +33,7 @@ fun SingleChapter(
     ) {
         Text(
             text = chapter.id,
-            style = MaterialTheme.typography.displaySmall,
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.End
+            style = MaterialTheme.typography.headlineSmall
         )
         Column(
             modifier = Modifier
@@ -44,8 +42,7 @@ fun SingleChapter(
         ) {
             Text(
                 text = chapter.name,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface
+                style = MaterialTheme.typography.titleLarge
             )
             Row(
                 modifier = Modifier
@@ -54,21 +51,19 @@ fun SingleChapter(
             ) {
                 Text(
                     text = chapter.translatedName,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = MaterialTheme.typography.titleSmall
                 )
                 VerticalDivider(modifier = Modifier.padding(horizontal = 8.dp))
                 Text(
                     text = chapter.versesCount,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = MaterialTheme.typography.titleSmall
                 )
             }
         }
         Icon(
             painter = painterResource(id = chapter.revelationPlaceIcon),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
+            tint = Color.Unspecified,
             modifier = Modifier.size(30.dp)
         )
     }

@@ -30,14 +30,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.easyquran.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterListScreen(
-    viewModel: ChapterListViewModel = viewModel()
+    viewModel: ChapterListViewModel = hiltViewModel()
 ) {
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -62,6 +62,10 @@ private fun ChapterListScaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                ),
                 title = {
                     Text(
                         text = stringResource(R.string.app_name),
@@ -72,11 +76,11 @@ private fun ChapterListScaffold(
                 },
                 navigationIcon = {
                     Image(
-                        painter = painterResource(id = R.drawable.makkah),
+                        painter = painterResource(id = R.drawable.muslim),
                         contentDescription = null,
                         modifier = Modifier
                             .padding(start = 8.dp)
-                            .size(24.dp)
+                            .size(32.dp)
                     )
                 },
                 actions = {
