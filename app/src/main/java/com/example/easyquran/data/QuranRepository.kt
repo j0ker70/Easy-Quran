@@ -1,9 +1,9 @@
 package com.example.easyquran.data
 
-import com.example.easyquran.ui.chapters.ChapterListUIState
-import kotlinx.coroutines.flow.Flow
+import com.example.easyquran.model.domain.Chapter
+import com.example.easyquran.utils.ApiResponse
 
 interface QuranRepository {
 
-    fun getChapters(): Flow<ChapterListUIState>
+    suspend fun getChapters(): ApiResponse<List<Chapter>>
 }

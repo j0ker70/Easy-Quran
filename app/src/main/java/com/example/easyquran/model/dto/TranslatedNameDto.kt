@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class TranslatedNameDto(
     @SerializedName("language_name")
-    val languageName: String,
+    val languageName: String? = null,
 
     @SerializedName("name")
-    val name: String
+    val name: String? = null
 )

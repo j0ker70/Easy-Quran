@@ -1,11 +1,10 @@
 package com.example.easyquran.model.dto
 
-import com.example.easyquran.ui.chapters.toChapterUI
 import com.google.gson.annotations.SerializedName
 
 data class ChapterListDto(
     @SerializedName("chapters")
-    val chapters: List<ChapterDto>
+    val chapters: List<ChapterDto>?
 )
 
-fun ChapterListDto.toChapters() = chapters.map { it.toChapter().toChapterUI() }
+fun ChapterListDto.toChapters() = chapters?.map { it.toChapter() } ?: emptyList()

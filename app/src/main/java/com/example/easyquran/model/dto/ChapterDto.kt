@@ -5,27 +5,25 @@ import com.google.gson.annotations.SerializedName
 
 data class ChapterDto(
     @SerializedName("id")
-    val id: Int,
+    val id: Int? = 0,
 
     @SerializedName("name_simple")
-    val name: String,
+    val name: String? = null,
 
     @SerializedName("revelation_place")
-    val revelationPlace: String,
+    val revelationPlace: String? = null,
 
     @SerializedName("translated_name")
-    val translatedName: TranslatedNameDto,
+    val translatedName: TranslatedNameDto?,
 
     @SerializedName("verses_count")
-    val versesCount: Int
+    val versesCount: Int? = 0
 )
 
 fun ChapterDto.toChapter() = Chapter(
-    id = id,
-    name = name,
-    translatedName = translatedName.name,
-    versesCount = versesCount,
-    revelationPlace = revelationPlace
+    id = id ?: 0,
+    name = name ?: "",
+    translatedName = translatedName?.name ?: "",
+    versesCount = versesCount ?: 0,
+    revelationPlace = revelationPlace ?: "",
 )
-
-

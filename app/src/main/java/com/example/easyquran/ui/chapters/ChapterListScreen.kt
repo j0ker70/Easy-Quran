@@ -1,10 +1,15 @@
 package com.example.easyquran.ui.chapters
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,16 +20,19 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.easyquran.R
+import com.example.easyquran.model.domain.Chapter
+import com.example.easyquran.ui.theme.EasyQuranTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,15 +73,16 @@ private fun ChapterListScaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 title = {
                     Text(
                         text = stringResource(R.string.app_name),
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.SemiBold,
-                        )
+                        ),
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 },
                 navigationIcon = {
@@ -146,17 +157,92 @@ fun ChapterList(
     }
 }
 
+@Composable
+fun SingleChapter(
+    chapter: ChapterUI,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = chapter.id,
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 24.dp)
+        ) {
+            Text(
+                text = chapter.name,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Row(
+                modifier = Modifier
+                    .padding(top = 4.dp)
+                    .height(IntrinsicSize.Min)
+            ) {
+                Text(
+                    text = chapter.translatedName,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                VerticalDivider(modifier = Modifier.padding(horizontal = 8.dp))
+                Text(
+                    text = chapter.versesCount,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+        Icon(
+            painter = painterResource(id = chapter.revelationPlaceIcon),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier.size(30.dp)
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun SingleChapterPreview() {
+    EasyQuranTheme {
+        SingleChapter(
+            chapter = previewChapter,
+            modifier = Modifier.background(
+                color = MaterialTheme.colorScheme.background
+            )
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @PreviewLightDark
 @Composable
 private fun ChaptersListPreview() {
-    ChapterListScaffold(
-        scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState()),
-        chapterListUIState = ChapterListUIState.Success(
-            (1..100).map {
-                previewChapter.copy(id = it.toString())
-            }
-        ),
-        onLoadChapters = {}
-    )
+    EasyQuranTheme {
+        ChapterListScaffold(
+            scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState()),
+            chapterListUIState = ChapterListUIState.Success(
+                (1..100).map {
+                    previewChapter.copy(id = it.toString())
+                }
+            ),
+            onLoadChapters = {}
+        )
+    }
 }
+
+internal val previewChapter = Chapter(
+    id = 1,
+    name = "Al-Fatihah",
+    translatedName = "The Opener",
+    versesCount = 7,
+    revelationPlace = "makkah"
+).toChapterUI()
