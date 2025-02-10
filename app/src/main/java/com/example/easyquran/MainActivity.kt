@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.easyquran.ui.chapters.ChapterListScreen
+import com.example.easyquran.navigation.EasyQuranNavHost
 import com.example.easyquran.ui.theme.EasyQuranTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,8 +16,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             EasyQuranTheme {
-                // TODO: move to navigation
-                ChapterListScreen()
+                EasyQuranNavHost()
             }
         }
     }

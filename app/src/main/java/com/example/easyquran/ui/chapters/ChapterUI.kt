@@ -1,9 +1,12 @@
 package com.example.easyquran.ui.chapters
 
 import androidx.annotation.DrawableRes
-import com.example.easyquran.R
 import com.example.easyquran.model.domain.Chapter
+import com.example.easyquran.utils.revelationPlaceIconToString
+import com.example.easyquran.utils.revelationPlaceStringToIcon
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ChapterUI(
     val id: String,
     val name: String,
@@ -17,5 +20,13 @@ fun Chapter.toChapterUI() = ChapterUI(
     name = name,
     translatedName = translatedName,
     versesCount = "$versesCount verses",
-    revelationPlaceIcon = if (revelationPlace == "makkah") R.drawable.makkah else R.drawable.madinah
+    revelationPlaceIcon = revelationPlaceStringToIcon(revelationPlace)
+)
+
+fun ChapterUI.toChapter() = Chapter(
+    id = id.toInt(),
+    name = name,
+    translatedName = translatedName,
+    versesCount = versesCount.split(" ")[0].toInt(),
+    revelationPlace = revelationPlaceIconToString(revelationPlaceIcon)
 )

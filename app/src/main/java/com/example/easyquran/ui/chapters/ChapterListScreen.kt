@@ -1,9 +1,8 @@
 package com.example.easyquran.ui.chapters
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -14,134 +13,70 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.easyquran.R
 import com.example.easyquran.model.domain.Chapter
+import com.example.easyquran.ui.components.CircularProgress
 import com.example.easyquran.ui.theme.EasyQuranTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterListScreen(
+    onChapterClick: (ChapterUI) -> Unit,
     viewModel: ChapterListViewModel = hiltViewModel()
 ) {
-
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-
     val chapterListUIState by viewModel.chaptersListState.collectAsStateWithLifecycle()
 
-    ChapterListScaffold(
-        scrollBehavior = scrollBehavior,
+    ChapterListContent(
         chapterListUIState = chapterListUIState,
         onLoadChapters = { viewModel.loadChapters() },
+        onChapterClick = onChapterClick
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ChapterListScaffold(
-    scrollBehavior: TopAppBarScrollBehavior,
+private fun ChapterListContent(
     chapterListUIState: ChapterListUIState,
     onLoadChapters: () -> Unit,
+    onChapterClick: (ChapterUI) -> Unit,
 ) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                title = {
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.SemiBold,
-                        ),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                },
-                navigationIcon = {
-                    Image(
-                        painter = painterResource(id = R.drawable.muslim),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .size(32.dp)
-                    )
-                },
-                actions = {
-                    Image(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                },
-                scrollBehavior = scrollBehavior
+    when (chapterListUIState) {
+        ChapterListUIState.Idle -> onLoadChapters()
+
+        ChapterListUIState.Loading -> {
+            CircularProgress(modifier = Modifier.fillMaxSize())
+        }
+
+        is ChapterListUIState.Success -> {
+            ChapterList(
+                chapterList = chapterListUIState.chapterList,
+                onChapterClick = onChapterClick
             )
         }
-    ) { innerPadding ->
 
-        when (chapterListUIState) {
-
-            ChapterListUIState.Idle -> onLoadChapters()
-
-            ChapterListUIState.Loading -> {
-                ChapterLoading()
-            }
-
-            is ChapterListUIState.Success -> {
-                ChapterList(
-                    chapterList = chapterListUIState.chapterList,
-                    modifier = Modifier.padding(innerPadding)
-                )
-            }
-
-            is ChapterListUIState.Failure -> {
-                // TODO
-            }
+        is ChapterListUIState.Failure -> {
+            // TODO
         }
-    }
-}
-
-@Composable
-fun ChapterLoading(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        CircularProgressIndicator()
     }
 }
 
 @Composable
 fun ChapterList(
     chapterList: List<ChapterUI>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onChapterClick: (ChapterUI) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -150,7 +85,9 @@ fun ChapterList(
         items(chapterList) { chapter ->
             SingleChapter(
                 chapter = chapter,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onChapterClick(chapter) },
             )
             HorizontalDivider()
         }
@@ -222,19 +159,18 @@ private fun SingleChapterPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @PreviewLightDark
 @Composable
 private fun ChaptersListPreview() {
     EasyQuranTheme {
-        ChapterListScaffold(
-            scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState()),
+        ChapterListContent(
             chapterListUIState = ChapterListUIState.Success(
                 (1..100).map {
                     previewChapter.copy(id = it.toString())
                 }
             ),
-            onLoadChapters = {}
+            onLoadChapters = {},
+            onChapterClick = {}
         )
     }
 }
