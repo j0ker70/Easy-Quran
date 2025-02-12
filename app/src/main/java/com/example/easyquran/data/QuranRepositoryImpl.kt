@@ -9,6 +9,8 @@ class QuranRepositoryImpl @Inject constructor(
 
     override suspend fun getChapters() = dataSource.getChapters()
 
-    override suspend fun getVersesForChapter(chapter: Chapter) =
-        dataSource.getVersesForChapter(chapter)
+    override suspend fun getVersesForChapter(
+        chapter: Chapter,
+        page: Int
+    ) = dataSource.getVersesForChapter(chapter, page)
 }

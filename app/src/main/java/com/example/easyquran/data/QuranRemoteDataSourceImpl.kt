@@ -1,9 +1,8 @@
 package com.example.easyquran.data
 
-import android.util.Log
 import com.example.easyquran.model.domain.Chapter
 import com.example.easyquran.model.domain.Verses
-import com.example.easyquran.model.dto.Verse
+import com.example.easyquran.model.dto.getVerseList
 import com.example.easyquran.model.dto.toChapters
 import com.example.easyquran.utils.ApiResponse
 import retrofit2.HttpException
@@ -27,49 +26,34 @@ class QuranRemoteDataSourceImpl @Inject constructor(
         ApiResponse.Failure(e.toString())
     }
 
-    override suspend fun getVersesForChapter(chapter: Chapter): ApiResponse<Verses> {
-        val versesText: MutableList<String> = emptyList<String>().toMutableList()
-
-        var currentPage = 1
-        while (true) {
-            try {
-                val verseResponse = quranApi.getVersesForChapter(chapter.id, currentPage)
-
-                if (verseResponse.isSuccessful) {
-                    val verseListDto = verseResponse.body()
-                        ?: return ApiResponse.Failure("Null Response")
-                    versesText.addAll(parseListFromDto(verseListDto.verses))
-                    if (verseListDto.pagination?.nextPage == null) {
-                        break
-                    }
-                    Log.i("pial", "pagination ${verseListDto.pagination}")
-                } else {
-                    return ApiResponse.Failure("Server Error")
-                }
-            } catch (e: HttpException) {
-                return ApiResponse.Failure(e.message())
-            } catch (e: Exception) {
-                return ApiResponse.Failure(e.toString())
-            }
-            ++currentPage
-        }
-
-        return ApiResponse.Success(
-            Verses(
-                chapterId = chapter.id,
-                chapterName = chapter.name,
-                chapterTranslatedName = chapter.translatedName,
-                chapterRevelationPlace = chapter.revelationPlace,
-                verseList = versesText
-            )
+    override suspend fun getVersesForChapter(
+        chapter: Chapter,
+        page: Int
+    ): ApiResponse<Verses> = try {
+        val verseResponse = quranApi.getVersesForChapter(
+            chapterID = chapter.id,
+            translations = "en-taqi-usmani",
+            page = page,
+            perPage = 20
         )
-    }
 
-    private fun parseListFromDto(verses: List<Verse>?): List<String> {
-        return verses?.map { verse ->
-            verse.translations?.let {
-                it[0].text ?: ""
-            } ?: ""
-        } ?: emptyList()
+        if (verseResponse.isSuccessful) {
+            ApiResponse.Success(
+                Verses(
+                    chapterId = chapter.id,
+                    chapterName = chapter.name,
+                    chapterTranslatedName = chapter.translatedName,
+                    chapterRevelationPlace = chapter.revelationPlace,
+                    canPaginate = verseResponse.body()?.pagination?.nextPage != null,
+                    verseList = verseResponse.body()?.getVerseList() ?: emptyList()
+                )
+            )
+        } else {
+            ApiResponse.Failure("Server Error")
+        }
+    } catch (e: HttpException) {
+        ApiResponse.Failure(e.message())
+    } catch (e: Exception) {
+        ApiResponse.Failure(e.toString())
     }
 }

@@ -8,5 +8,5 @@ interface QuranRepository {
 
     suspend fun getChapters(): ApiResponse<List<Chapter>>
 
-    suspend fun getVersesForChapter(chapter: Chapter): ApiResponse<Verses>
+    suspend fun getVersesForChapter(chapter: Chapter, page: Int): ApiResponse<Verses>
 }

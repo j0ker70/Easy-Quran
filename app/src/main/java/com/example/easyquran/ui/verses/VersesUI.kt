@@ -9,6 +9,7 @@ data class VersesUI(
     val chapterName: String,
     val chapterTranslatedName: String,
     @DrawableRes val chapterRevelationPlaceIcon: Int,
+    val canPaginate: Boolean,
     val verseList: List<String>
 )
 
@@ -17,5 +18,6 @@ fun Verses.toVersesUI() = VersesUI(
     chapterName = chapterName,
     chapterTranslatedName = chapterTranslatedName,
     chapterRevelationPlaceIcon = revelationPlaceStringToIcon(chapterRevelationPlace),
+    canPaginate = canPaginate,
     verseList = verseList
 )

@@ -9,3 +9,5 @@ data class TranslationDto(
     @SerializedName("text")
     val text: String?
 )
+
+fun TranslationDto.getText() = text ?: ""

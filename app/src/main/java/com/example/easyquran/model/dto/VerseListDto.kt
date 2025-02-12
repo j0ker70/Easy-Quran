@@ -7,5 +7,7 @@ data class VerseListDto(
     val pagination: PaginationDto?,
 
     @SerializedName("verses")
-    val verses: List<Verse>?
+    val verses: List<VerseDto>?
 )
+
+fun VerseListDto.getVerseList() = verses?.map { it.getTranslation() } ?: emptyList()

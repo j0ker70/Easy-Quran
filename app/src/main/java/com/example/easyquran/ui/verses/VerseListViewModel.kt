@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easyquran.data.QuranRepository
 import com.example.easyquran.model.domain.Chapter
+import com.example.easyquran.model.domain.Verses
 import com.example.easyquran.utils.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,15 +22,41 @@ class VerseListViewModel @Inject constructor(
     private var _verseListState = MutableStateFlow<VerseListUIState>(VerseListUIState.Idle)
     val verseListState: StateFlow<VerseListUIState> get() = _verseListState
 
-    fun loadVerseForChapter(chapter: Chapter) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _verseListState.update { VerseListUIState.Loading }
+    private var currentPage = 1
 
-            when (val response = quranRepository.getVersesForChapter(chapter)) {
-                is ApiResponse.Success -> _verseListState.update {
-                    VerseListUIState.Success(
-                        response.data.toVersesUI()
-                    )
+    private var _canPaginate = MutableStateFlow(true)
+    val canPaginate: StateFlow<Boolean> get() = _canPaginate
+
+    fun loadNextVersesForChapter(chapter: Chapter) {
+        if (!_canPaginate.value) return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            if (_verseListState.value !is VerseListUIState.Success) {
+                _verseListState.update { VerseListUIState.Loading }
+            }
+
+            when (val response = quranRepository.getVersesForChapter(chapter, currentPage)) {
+                is ApiResponse.Success -> {
+                    if (_verseListState.value is VerseListUIState.Success) {
+                        _verseListState.update {
+                            VerseListUIState.Success(
+                                verses = getUpdatedVersesFroResponse(
+                                    _verseListState.value as VerseListUIState.Success,
+                                    response
+                                )
+                            )
+                        }
+                    } else {
+                        _verseListState.update {
+                            VerseListUIState.Success(
+                                response.data.toVersesUI()
+                            )
+                        }
+                    }
+
+                    _canPaginate.update {
+                        response.data.canPaginate
+                    }
                 }
 
                 is ApiResponse.Failure -> _verseListState.update {
@@ -38,7 +65,17 @@ class VerseListViewModel @Inject constructor(
                     )
                 }
             }
+            ++currentPage
         }
+    }
+
+    private fun getUpdatedVersesFroResponse(
+        state: VerseListUIState.Success,
+        response: ApiResponse.Success<Verses>
+    ): VersesUI {
+        return state.verses.copy(
+            verseList = state.verses.verseList + response.data.verseList
+        )
     }
 }
 

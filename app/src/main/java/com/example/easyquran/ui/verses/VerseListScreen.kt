@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,27 +32,35 @@ fun VerseListScreen(
 ) {
     val verseListState by viewModel.verseListState.collectAsStateWithLifecycle()
 
+    val canPaginate by viewModel.canPaginate.collectAsStateWithLifecycle()
+
     VerseListContent(
         verseListState = verseListState,
-        onLoadVerses = {
-            viewModel.loadVerseForChapter(chapterUI.toChapter())
-        }
+        onLoadNextVerses = {
+            viewModel.loadNextVersesForChapter(
+                chapter = chapterUI.toChapter()
+            )
+        },
+        canPaginate = canPaginate
     )
 }
 
 @Composable
 fun VerseListContent(
     verseListState: VerseListUIState,
-    onLoadVerses: () -> Unit,
+    onLoadNextVerses: () -> Unit,
+    canPaginate: Boolean,
     modifier: Modifier = Modifier
 ) {
     when (verseListState) {
-        VerseListUIState.Idle -> onLoadVerses()
+        VerseListUIState.Idle -> onLoadNextVerses()
 
         VerseListUIState.Loading -> CircularProgress(modifier = modifier.fillMaxSize())
 
         is VerseListUIState.Success -> VerseList(
             versesUI = verseListState.verses,
+            canPaginate = canPaginate,
+            onLoadNextVerses = onLoadNextVerses,
             modifier = modifier
         )
 
@@ -62,6 +71,8 @@ fun VerseListContent(
 @Composable
 fun VerseList(
     versesUI: VersesUI,
+    canPaginate: Boolean,
+    onLoadNextVerses: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -88,6 +99,14 @@ fun VerseList(
                     text = verse
                 )
             }
+            item {
+                if (canPaginate) {
+                    CircularProgress(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp))
+                    onLoadNextVerses()
+                }
+            }
         }
     }
 }
@@ -96,7 +115,11 @@ fun VerseList(
 @Composable
 private fun VerseListScaffoldPreview() {
     EasyQuranTheme {
-        VerseList(previewVersesUI)
+        VerseList(
+            previewVersesUI,
+            canPaginate = false,
+            onLoadNextVerses = {}
+        )
     }
 }
 
@@ -105,6 +128,7 @@ internal val previewVersesUI = Verses(
     chapterName = "Al-Fatihah",
     chapterTranslatedName = "The Opener",
     chapterRevelationPlace = "makkah",
+    canPaginate = false,
     verseList = listOf(
         "With the name of Allah, the All-Merciful, the Very-Merciful.",
         "Praise belongs to Allah, the Lord of all the worlds.",

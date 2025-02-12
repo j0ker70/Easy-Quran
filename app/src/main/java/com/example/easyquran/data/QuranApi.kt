@@ -12,9 +12,11 @@ interface QuranApi {
     @GET("chapters")
     suspend fun getChapters(): Response<ChapterListDto>
 
-    @GET("verses/by_chapter/{chapterID}?translations=en-taqi-usmani")
+    @GET("verses/by_chapter/{chapter_number}")
     suspend fun getVersesForChapter(
-        @Path("chapterID") chapterID: Int,
-        @Query("page") page: Int
+        @Path("chapter_number") chapterID: Int,
+        @Query("translations") translations: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
     ): Response<VerseListDto>
 }

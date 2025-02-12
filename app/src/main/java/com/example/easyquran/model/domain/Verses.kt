@@ -5,5 +5,6 @@ data class Verses(
     val chapterName: String,
     val chapterTranslatedName: String,
     val chapterRevelationPlace: String,
+    val canPaginate: Boolean,
     val verseList: List<String>
 )
