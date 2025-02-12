@@ -1,7 +1,8 @@
 package com.example.easyquran.ui.verses
 
 import androidx.annotation.DrawableRes
-import com.example.easyquran.model.domain.Verses
+import com.example.easyquran.model.domain.ChapterVerse
+import com.example.easyquran.model.domain.Verse
 import com.example.easyquran.utils.revelationPlaceStringToIcon
 
 data class VersesUI(
@@ -10,10 +11,10 @@ data class VersesUI(
     val chapterTranslatedName: String,
     @DrawableRes val chapterRevelationPlaceIcon: Int,
     val canPaginate: Boolean,
-    val verseList: List<String>
+    val verseList: List<Verse>
 )
 
-fun Verses.toVersesUI() = VersesUI(
+fun ChapterVerse.toVersesUI() = VersesUI(
     chapterId = chapterId,
     chapterName = chapterName,
     chapterTranslatedName = chapterTranslatedName,

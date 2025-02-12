@@ -18,9 +18,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -154,7 +155,6 @@ fun ChapterList(
                     .fillMaxWidth()
                     .clickable { onChapterClick(chapter) },
             )
-            HorizontalDivider()
         }
     }
 }
@@ -164,50 +164,55 @@ fun SingleChapter(
     chapter: ChapterUI,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Card(
+        modifier = Modifier.padding(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Text(
-            text = chapter.id,
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 24.dp)
+        Row(
+            modifier = modifier
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = chapter.name,
-                style = MaterialTheme.typography.titleLarge,
+                text = chapter.id,
+                style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            Row(
+            Column(
                 modifier = Modifier
-                    .padding(top = 4.dp)
-                    .height(IntrinsicSize.Min)
+                    .weight(1f)
+                    .padding(start = 24.dp)
             ) {
                 Text(
-                    text = chapter.translatedName,
-                    style = MaterialTheme.typography.titleSmall,
+                    text = chapter.name,
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                VerticalDivider(modifier = Modifier.padding(horizontal = 8.dp))
-                Text(
-                    text = chapter.versesCount,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                Row(
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .height(IntrinsicSize.Min)
+                ) {
+                    Text(
+                        text = chapter.translatedName,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    VerticalDivider(modifier = Modifier.padding(horizontal = 8.dp))
+                    Text(
+                        text = chapter.versesCount,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
+            Icon(
+                painter = painterResource(id = chapter.revelationPlaceIcon),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.size(30.dp)
+            )
         }
-        Icon(
-            painter = painterResource(id = chapter.revelationPlaceIcon),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier.size(30.dp)
-        )
     }
 }
 

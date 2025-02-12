@@ -1,7 +1,7 @@
 package com.example.easyquran.data
 
 import com.example.easyquran.model.domain.Chapter
-import com.example.easyquran.model.domain.Verses
+import com.example.easyquran.model.domain.ChapterVerse
 import com.example.easyquran.model.dto.getVerseList
 import com.example.easyquran.model.dto.toChapters
 import com.example.easyquran.utils.ApiResponse
@@ -29,9 +29,10 @@ class QuranRemoteDataSourceImpl @Inject constructor(
     override suspend fun getVersesForChapter(
         chapter: Chapter,
         page: Int
-    ): ApiResponse<Verses> = try {
+    ): ApiResponse<ChapterVerse> = try {
         val verseResponse = quranApi.getVersesForChapter(
             chapterID = chapter.id,
+            fields = "text_indopak",
             translations = "en-taqi-usmani",
             page = page,
             perPage = 20
@@ -39,7 +40,7 @@ class QuranRemoteDataSourceImpl @Inject constructor(
 
         if (verseResponse.isSuccessful) {
             ApiResponse.Success(
-                Verses(
+                ChapterVerse(
                     chapterId = chapter.id,
                     chapterName = chapter.name,
                     chapterTranslatedName = chapter.translatedName,

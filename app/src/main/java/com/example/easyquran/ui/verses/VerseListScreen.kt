@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -38,7 +39,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.easyquran.model.domain.Verses
+import com.example.easyquran.model.domain.ChapterVerse
+import com.example.easyquran.model.domain.Verse
 import com.example.easyquran.ui.chapters.ChapterUI
 import com.example.easyquran.ui.chapters.previewChapter
 import com.example.easyquran.ui.chapters.toChapter
@@ -111,7 +113,9 @@ fun VerseListScaffold(
                             )
                             VerticalDivider(modifier = Modifier.padding(horizontal = 8.dp))
                             Text(
-                                text = chapterUI.toChapter().revelationPlace.uppercase(),
+                                text = chapterUI.toChapter().revelationPlace.replaceFirstChar {
+                                    it.uppercase()
+                                },
                                 style = MaterialTheme.typography.titleSmall,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -189,8 +193,11 @@ fun VerseList(
 }
 
 @Composable
-fun VerseItem(verseId: Int, verseText: String) {
-    Card(modifier = Modifier.padding(8.dp)) {
+fun VerseItem(verseId: Int, verse: Verse) {
+    Card(
+        modifier = Modifier.padding(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -198,19 +205,26 @@ fun VerseItem(verseId: Int, verseText: String) {
         ) {
             Text(
                 text = verseId.toString(),
-                style = MaterialTheme.typography.bodySmall.copy(
-                    fontSize = 16.sp
-                ),
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.headlineSmall
             )
-            Text(
-                text = verseText,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Justify
-                ),
-                modifier = Modifier.padding(top = 4.dp)
-            )
+            Column {
+                Text(
+                    text = verse.arabic,
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 32.sp,
+                        textAlign = TextAlign.End
+                    )
+                )
+                Text(
+                    text = verse.translated,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Justify
+                    ),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
         }
     }
 }
@@ -223,26 +237,54 @@ private fun VerseListScaffoldPreview() {
             chapterUI = previewChapter,
             onNavigateUp = {},
             scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-            verseListState = VerseListUIState.Success(previewVersesUI),
+            verseListState = VerseListUIState.Success(previewChapterVerseUI),
             canPaginate = false,
             onLoadNextVerses = {}
         )
     }
 }
 
-internal val previewVersesUI = Verses(
+internal val previewChapterVerseUI = ChapterVerse(
     chapterId = 1,
     chapterName = "Al-Fatihah",
     chapterTranslatedName = "The Opener",
     chapterRevelationPlace = "makkah",
     canPaginate = false,
     verseList = listOf(
-        "With the name of Allah, the All-Merciful, the Very-Merciful.",
-        "Praise belongs to Allah, the Lord of all the worlds.",
-        "the All-Merciful, the Very Merciful.",
-        "the Master of the Day of Requital.",
-        "You alone do we worship, and from You alone do we seek help.",
-        "Take us on the straight path.",
-        "the path of those on whom You have bestowed Your Grace, not of those who have incurred Your wrath, nor of those who have gone astray."
+        Verse(
+            verseKey = "1:1",
+            arabic = "بِسۡمِ اللهِ الرَّحۡمٰنِ الرَّحِيۡمِ",
+            translated = "With the name of Allah, the All-Merciful, the Very-Merciful."
+        ),
+        Verse(
+            verseKey = "1:2",
+            arabic = "اَلۡحَمۡدُ لِلّٰهِ رَبِّ الۡعٰلَمِيۡنَۙ‏",
+            translated = "Praise belongs to Allah, the Lord of all the worlds."
+        ),
+        Verse(
+            verseKey = "1:3",
+            arabic = "الرَّحۡمٰنِ الرَّحِيۡمِۙ‏",
+            translated = "the All-Merciful, the Very Merciful."
+        ),
+        Verse(
+            verseKey = "1:4",
+            arabic = "مٰلِكِ يَوۡمِ الدِّيۡنِؕ‏",
+            translated = "the Master of the Day of Requital."
+        ),
+        Verse(
+            verseKey = "1:5",
+            arabic = "اِيَّاكَ نَعۡبُدُ وَاِيَّاكَ نَسۡتَعِيۡنُؕ‏",
+            translated = "You alone do we worship, and from You alone do we seek help."
+        ),
+        Verse(
+            verseKey = "1:6",
+            arabic = "اِهۡدِنَا الصِّرَاطَ الۡمُسۡتَقِيۡمَۙ‏",
+            translated = "Take us on the straight path."
+        ),
+        Verse(
+            verseKey = "1:7",
+            arabic = "صِرَاطَ الَّذِيۡنَ اَنۡعَمۡتَ عَلَيۡهِمۡ ۙ‏ غَيۡرِ الۡمَغۡضُوۡبِ عَلَيۡهِمۡ وَلَا الضَّآلِّيۡنَ‏",
+            translated = "the path of those on whom You have bestowed Your Grace, not of those who have incurred Your wrath, nor of those who have gone astray."
+        )
     )
 ).toVersesUI()

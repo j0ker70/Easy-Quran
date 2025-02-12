@@ -10,4 +10,4 @@ data class VerseListDto(
     val verses: List<VerseDto>?
 )
 
-fun VerseListDto.getVerseList() = verses?.map { it.getTranslation() } ?: emptyList()
+fun VerseListDto.getVerseList() = verses?.map { it.getVerse() } ?: emptyList()

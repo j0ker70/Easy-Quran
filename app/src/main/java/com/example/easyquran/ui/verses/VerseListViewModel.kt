@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easyquran.data.QuranRepository
 import com.example.easyquran.model.domain.Chapter
-import com.example.easyquran.model.domain.Verses
+import com.example.easyquran.model.domain.ChapterVerse
 import com.example.easyquran.utils.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -71,7 +71,7 @@ class VerseListViewModel @Inject constructor(
 
     private fun getUpdatedVersesFroResponse(
         state: VerseListUIState.Success,
-        response: ApiResponse.Success<Verses>
+        response: ApiResponse.Success<ChapterVerse>
     ): VersesUI {
         return state.verses.copy(
             verseList = state.verses.verseList + response.data.verseList
