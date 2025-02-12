@@ -46,6 +46,7 @@ import com.example.easyquran.ui.chapters.previewChapter
 import com.example.easyquran.ui.chapters.toChapter
 import com.example.easyquran.ui.components.CircularProgress
 import com.example.easyquran.ui.theme.EasyQuranTheme
+import com.example.easyquran.ui.theme.NotoSansArabic
 
 @Composable
 fun VerseListScreen(
@@ -127,9 +128,7 @@ fun VerseListScaffold(
                         Image(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = null,
-                            modifier = Modifier
-                                .padding(start = 8.dp)
-                                .size(32.dp)
+                            modifier = Modifier.size(32.dp)
                         )
                     }
                 },
@@ -212,6 +211,7 @@ fun VerseItem(verseId: Int, verse: Verse) {
                     text = verse.arabic,
                     modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.bodyLarge.copy(
+                        fontFamily = NotoSansArabic,
                         fontSize = 32.sp,
                         textAlign = TextAlign.End
                     )
