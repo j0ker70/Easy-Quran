@@ -33,5 +33,11 @@ val NotoSansArabic = FontFamily(
     )
 )
 
+val NaskhFont = FontFamily(
+    Font(
+        resId = R.font.naskh_nastaleeq_indo_pak_qwbw
+    )
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography()

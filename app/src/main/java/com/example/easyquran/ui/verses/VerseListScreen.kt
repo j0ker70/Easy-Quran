@@ -46,7 +46,7 @@ import com.example.easyquran.ui.chapters.previewChapter
 import com.example.easyquran.ui.chapters.toChapter
 import com.example.easyquran.ui.components.CircularProgress
 import com.example.easyquran.ui.theme.EasyQuranTheme
-import com.example.easyquran.ui.theme.NotoSansArabic
+import com.example.easyquran.ui.theme.NaskhFont
 
 @Composable
 fun VerseListScreen(
@@ -112,7 +112,7 @@ fun VerseListScaffold(
                                 style = MaterialTheme.typography.titleSmall,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
-                            VerticalDivider(modifier = Modifier.padding(horizontal = 8.dp))
+                            VerticalDivider(modifier = Modifier.padding(all = 8.dp))
                             Text(
                                 text = chapterUI.toChapter().revelationPlace.replaceFirstChar {
                                     it.uppercase()
@@ -211,9 +211,10 @@ fun VerseItem(verseId: Int, verse: Verse) {
                     text = verse.arabic,
                     modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.bodyLarge.copy(
-                        fontFamily = NotoSansArabic,
+                        fontFamily = NaskhFont,
                         fontSize = 32.sp,
-                        textAlign = TextAlign.End
+                        textAlign = TextAlign.End,
+                        lineHeight = 36.sp
                     )
                 )
                 Text(
