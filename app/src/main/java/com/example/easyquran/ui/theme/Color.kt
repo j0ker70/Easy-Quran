@@ -14,7 +14,8 @@ val ColorOnSurfaceLight = Color.Black
 val ColorOnSurfaceVariantLight = Color(0xFF959595)
 val ColorBackgroundLight = Color(0xFFF2F2F7)
 val ColorOnBackgroundLight = Color(0xFF737373)
-val ColorOutlineLight = Color.Black
+val ColorOutlineLight = Color.LightGray
+val ColorOutlineVariantLight = Color.Black
 
 val ColorPrimaryDark = Color(0xFF474747)
 val ColorOnPrimaryDark = Color.White

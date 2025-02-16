@@ -5,7 +5,6 @@ package com.example.easyquran.ui.chapters
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -15,13 +14,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -34,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -145,15 +147,18 @@ fun ChapterList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 5.dp)
     ) {
-        items(chapterList) { chapter ->
+        itemsIndexed(chapterList) { index, chapter ->
             SingleChapter(
                 chapter = chapter,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onChapterClick(chapter) },
+                isFirstChapter = index == 0,
+                isLastChapter = index == chapterList.lastIndex
             )
         }
     }
@@ -162,56 +167,73 @@ fun ChapterList(
 @Composable
 fun SingleChapter(
     chapter: ChapterUI,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isFirstChapter: Boolean = true,
+    isLastChapter: Boolean = false
 ) {
     Card(
-        modifier = Modifier.padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.elevatedCardElevation(10.dp),
+        shape = if (isFirstChapter) {
+            RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+        } else if (isLastChapter) {
+            RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp)
+        } else {
+            RectangleShape
+        },
+        modifier = modifier
     ) {
-        Row(
-            modifier = modifier
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = chapter.id,
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 24.dp)
+        Column {
+            Row(
+                modifier = modifier
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = chapter.name,
-                    style = MaterialTheme.typography.titleLarge,
+                    text = chapter.id,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Row(
+                Column(
                     modifier = Modifier
-                        .padding(top = 4.dp)
-                        .height(IntrinsicSize.Min)
+                        .weight(1f)
+                        .padding(start = 24.dp)
                 ) {
                     Text(
-                        text = chapter.translatedName,
-                        style = MaterialTheme.typography.titleSmall,
+                        text = chapter.name,
+                        style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    VerticalDivider(modifier = Modifier.padding(horizontal = 8.dp))
-                    Text(
-                        text = chapter.versesCount,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .height(IntrinsicSize.Min)
+                    ) {
+                        Text(
+                            text = chapter.translatedName,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        VerticalDivider(modifier = Modifier.padding(horizontal = 8.dp))
+                        Text(
+                            text = chapter.versesCount,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
+                Icon(
+                    painter = painterResource(id = chapter.revelationPlaceIcon),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(30.dp)
+                )
             }
-            Icon(
-                painter = painterResource(id = chapter.revelationPlaceIcon),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier.size(30.dp)
-            )
+            if (!isLastChapter) {
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
         }
     }
 }
