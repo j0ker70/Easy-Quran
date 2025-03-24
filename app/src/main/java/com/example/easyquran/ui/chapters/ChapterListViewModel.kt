@@ -24,31 +24,23 @@ class ChapterListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _chapterListState.update { ChapterListUIState.Loading }
 
-            when (val response = quranRepository.getChapters()) {
-                is ApiResponse.Success -> _chapterListState.update {
-                    ChapterListUIState.Success(
-                        response.data.map { it.toChapterUI() }
-                    )
+            val state = when (val response = quranRepository.getChapters()) {
+                is ApiResponse.Success -> {
+                    ChapterListUIState.Success(response.data.map { it.toChapterUI() })
                 }
 
-                is ApiResponse.Failure -> _chapterListState.update {
-                    ChapterListUIState.Failure(
-                        response.errorMsg
-                    )
-                }
+                is ApiResponse.Failure -> ChapterListUIState.Failure(response.errorMsg)
+
             }
+
+            _chapterListState.update { state }
         }
     }
 }
 
 sealed interface ChapterListUIState {
     data object Idle : ChapterListUIState
-
     data object Loading : ChapterListUIState
-
-    data class Success(
-        val chapterList: List<ChapterUI>
-    ) : ChapterListUIState
-
+    data class Success(val chapterList: List<ChapterUI>) : ChapterListUIState
     data class Failure(val errorMsg: String) : ChapterListUIState
 }

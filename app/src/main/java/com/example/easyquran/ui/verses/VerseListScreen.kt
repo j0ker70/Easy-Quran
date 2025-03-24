@@ -2,7 +2,6 @@
 
 package com.example.easyquran.ui.verses
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,15 +12,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -33,9 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,9 +56,7 @@ fun VerseListScreen(
     viewModel: VerseListViewModel = hiltViewModel()
 ) {
     val verseListState by viewModel.verseListState.collectAsStateWithLifecycle()
-
     val canPaginate by viewModel.canPaginate.collectAsStateWithLifecycle()
-
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     VerseListScaffold(
@@ -128,17 +124,19 @@ fun VerseListScaffold(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
-                        Image(
+                        Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(32.dp)
                         )
                     }
                 },
                 actions = {
-                    Image(
+                    Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(24.dp)
                     )
                 },
@@ -175,29 +173,32 @@ fun VerseList(
     onLoadNextVerses: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    Card(
         modifier = modifier
-            .fillMaxSize()
-            .padding(vertical = 8.dp)
     ) {
-        itemsIndexed(versesUI.verseList) { index, verse ->
-            VerseItem(
-                verseNo = index + 1,
-                verse = verse,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                isFirstVerse = index == 0,
-                isLastVerse = index == versesUI.verseList.lastIndex
-            )
-        }
-        item {
-            if (canPaginate) {
-                CircularProgress(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 4.dp)
+        ) {
+            itemsIndexed(versesUI.verseList) { index, verse ->
+                VerseItem(
+                    verseNo = index + 1,
+                    verse = verse,
+                    modifier = Modifier.fillMaxWidth(),
+                    isFirstVerse = index == 0,
+                    isLastVerse = index == versesUI.verseList.lastIndex
                 )
-                onLoadNextVerses()
+            }
+            item {
+                if (canPaginate) {
+                    CircularProgress(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                    )
+                    onLoadNextVerses()
+                }
             }
         }
     }
@@ -211,49 +212,36 @@ fun VerseItem(
     isFirstVerse: Boolean = false,
     isLastVerse: Boolean = false
 ) {
-    Card(
-        elevation = CardDefaults.elevatedCardElevation(10.dp),
-        shape = if (isFirstVerse) {
-            RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
-        } else if (isLastVerse) {
-            RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp)
-        } else {
-            RectangleShape
-        },
+    Column(
         modifier = modifier
+            .padding(horizontal = 12.dp),
+        verticalArrangement = Arrangement.Center,
     ) {
-        Column(
+        Text(
+            text = verse.arabic,
             modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .padding(top = 8.dp),
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = verse.arabic,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontFamily = NaskhFont,
-                    fontSize = 32.sp,
-                    textAlign = TextAlign.End,
-                    lineHeight = 36.sp
-                )
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontFamily = NaskhFont,
+                fontSize = 32.sp,
+                textDirection = TextDirection.Rtl,
+                lineHeight = 48.sp,
             )
-            Text(
-                text = "$verseNo. ${verse.translated}",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Justify
-                ),
-                modifier = Modifier.padding(top = 4.dp)
+        )
+        Text(
+            text = "$verseNo. ${verse.translated}",
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 20.sp,
+                textAlign = TextAlign.Justify
+            ),
+            modifier = Modifier.padding(top = 4.dp)
+        )
+        if (!isLastVerse) {
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 12.dp),
+                color = MaterialTheme.colorScheme.outline
             )
-            if (!isLastVerse) {
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.outline
-                )
-            }
         }
     }
 }

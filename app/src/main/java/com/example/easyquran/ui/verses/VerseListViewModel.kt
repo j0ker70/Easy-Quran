@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,12 +21,12 @@ class VerseListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var _verseListState = MutableStateFlow<VerseListUIState>(VerseListUIState.Idle)
-    val verseListState: StateFlow<VerseListUIState> get() = _verseListState
-
-    private var currentPage = 1
+    val verseListState: StateFlow<VerseListUIState> = _verseListState.asStateFlow()
 
     private var _canPaginate = MutableStateFlow(true)
-    val canPaginate: StateFlow<Boolean> get() = _canPaginate
+    val canPaginate: StateFlow<Boolean> = _canPaginate.asStateFlow()
+
+    private var currentPage = 1
 
     fun loadNextVersesForChapter(chapter: Chapter) {
         if (!_canPaginate.value) return
@@ -40,7 +41,7 @@ class VerseListViewModel @Inject constructor(
                     if (_verseListState.value is VerseListUIState.Success) {
                         _verseListState.update {
                             VerseListUIState.Success(
-                                verses = getUpdatedVersesFroResponse(
+                                verses = getUpdatedVersesFromResponse(
                                     _verseListState.value as VerseListUIState.Success,
                                     response
                                 )
@@ -59,17 +60,15 @@ class VerseListViewModel @Inject constructor(
                     }
                 }
 
-                is ApiResponse.Failure -> _verseListState.update {
-                    VerseListUIState.Failure(
-                        response.errorMsg
-                    )
+                is ApiResponse.Failure -> {
+                    _verseListState.update { VerseListUIState.Failure(response.errorMsg) }
                 }
             }
             ++currentPage
         }
     }
 
-    private fun getUpdatedVersesFroResponse(
+    private fun getUpdatedVersesFromResponse(
         state: VerseListUIState.Success,
         response: ApiResponse.Success<ChapterVerse>
     ): VersesUI {
@@ -81,12 +80,7 @@ class VerseListViewModel @Inject constructor(
 
 sealed interface VerseListUIState {
     data object Idle : VerseListUIState
-
     data object Loading : VerseListUIState
-
-    data class Success(
-        val verses: VersesUI
-    ) : VerseListUIState
-
+    data class Success(val verses: VersesUI) : VerseListUIState
     data class Failure(val errorMsg: String) : VerseListUIState
 }

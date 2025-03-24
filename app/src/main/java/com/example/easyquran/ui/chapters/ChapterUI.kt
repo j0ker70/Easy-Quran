@@ -27,6 +27,6 @@ fun ChapterUI.toChapter() = Chapter(
     id = id.toInt(),
     name = name,
     translatedName = translatedName,
-    versesCount = versesCount.split(" ")[0].toInt(),
+    versesCount = versesCount.takeIf { it.isEmpty() }?.split(" ")?.first()?.toInt() ?: 0,
     revelationPlace = revelationPlaceIconToString(revelationPlaceIcon)
 )
