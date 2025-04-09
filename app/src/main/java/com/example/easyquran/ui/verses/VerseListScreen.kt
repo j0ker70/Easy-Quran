@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
@@ -180,13 +181,13 @@ fun VerseList(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = 4.dp)
+                .testTag("verse_list")
         ) {
             itemsIndexed(versesUI.verseList) { index, verse ->
                 VerseItem(
                     verseNo = index + 1,
                     verse = verse,
                     modifier = Modifier.fillMaxWidth(),
-                    isFirstVerse = index == 0,
                     isLastVerse = index == versesUI.verseList.lastIndex
                 )
             }
@@ -209,7 +210,6 @@ fun VerseItem(
     verseNo: Int,
     verse: Verse,
     modifier: Modifier = Modifier,
-    isFirstVerse: Boolean = false,
     isLastVerse: Boolean = false
 ) {
     Column(

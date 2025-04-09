@@ -5,35 +5,35 @@ import androidx.lifecycle.viewModelScope
 import com.example.easyquran.data.QuranRepository
 import com.example.easyquran.utils.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ChapterListViewModel @Inject constructor(
-    private val quranRepository: QuranRepository
+    private val quranRepository: QuranRepository,
+    private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _chapterListState = MutableStateFlow<ChapterListUIState>(ChapterListUIState.Idle)
-    val chaptersListState: StateFlow<ChapterListUIState> get() = _chapterListState
+    val chaptersListState = _chapterListState.asStateFlow()
 
     fun loadChapters() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             _chapterListState.update { ChapterListUIState.Loading }
 
-            val state = when (val response = quranRepository.getChapters()) {
-                is ApiResponse.Success -> {
-                    ChapterListUIState.Success(response.data.map { it.toChapterUI() })
+            _chapterListState.update {
+                when (val response = quranRepository.getChapters()) {
+                    is ApiResponse.Success -> {
+                        ChapterListUIState.Success(response.data.map { it.toChapterUI() })
+                    }
+
+                    is ApiResponse.Failure -> ChapterListUIState.Failure(response.errorMsg)
                 }
-
-                is ApiResponse.Failure -> ChapterListUIState.Failure(response.errorMsg)
-
             }
-
-            _chapterListState.update { state }
         }
     }
 }

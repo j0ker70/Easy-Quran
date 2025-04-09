@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Easy Quran"
 include(":app")
+include(":benchmark")

@@ -6,6 +6,10 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,6 +20,7 @@ import com.example.easyquran.ui.verses.VerseListScreen
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EasyQuranNavHost() {
     val navController = rememberNavController()
@@ -28,7 +33,11 @@ fun EasyQuranNavHost() {
         },
         exitTransition = {
             ExitTransition.None
-        }
+        },
+        modifier = Modifier
+            .semantics {
+                testTagsAsResourceId = true
+            }
     ) {
         composable<Route.ChapterList> {
             ChapterListScreen(
