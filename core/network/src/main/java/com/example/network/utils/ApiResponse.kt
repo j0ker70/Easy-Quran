@@ -1,4 +1,4 @@
-package com.example.easyquran.utils
+package com.example.network.utils
 
 sealed class ApiResponse<out T> {
 

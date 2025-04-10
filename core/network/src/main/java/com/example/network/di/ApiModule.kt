@@ -1,7 +1,7 @@
-package com.example.easyquran.di
+package com.example.network.di
 
-import com.example.easyquran.BuildConfig
-import com.example.easyquran.data.QuranApi
+import com.example.network.BuildConfig
+import com.example.network.data.QuranApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

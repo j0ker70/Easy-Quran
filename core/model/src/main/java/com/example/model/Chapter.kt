@@ -1,4 +1,4 @@
-package com.example.easyquran.model.domain
+package com.example.model
 
 data class Chapter(
     val id: Int,

@@ -1,7 +1,7 @@
-package com.example.easyquran.data
+package com.example.network.data
 
-import com.example.easyquran.model.dto.ChapterListDto
-import com.example.easyquran.model.dto.VerseListDto
+import com.example.network.dto.ChapterListDto
+import com.example.network.dto.VerseListDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

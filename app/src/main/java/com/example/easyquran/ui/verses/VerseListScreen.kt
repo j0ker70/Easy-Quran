@@ -41,14 +41,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.easyquran.model.domain.ChapterVerse
-import com.example.easyquran.model.domain.Verse
 import com.example.easyquran.ui.chapters.ChapterUI
 import com.example.easyquran.ui.chapters.previewChapter
 import com.example.easyquran.ui.chapters.toChapter
 import com.example.easyquran.ui.components.CircularProgress
 import com.example.easyquran.ui.theme.EasyQuranTheme
 import com.example.easyquran.ui.theme.NaskhFont
+import com.example.model.ChapterVerse
+import com.example.model.Verse
 
 @Composable
 fun VerseListScreen(

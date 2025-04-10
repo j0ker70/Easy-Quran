@@ -1,6 +1,7 @@
 package com.example.easyquran.data
 
-import com.example.easyquran.model.domain.Chapter
+import com.example.model.Chapter
+import com.example.network.data.QuranRemoteDataSource
 import javax.inject.Inject
 
 class QuranRepositoryImpl @Inject constructor(

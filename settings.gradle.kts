@@ -19,6 +19,10 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Easy Quran"
+rootProject.name = "easyquran"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
 include(":benchmark")
+include(":core:model")
+include(":core:network")

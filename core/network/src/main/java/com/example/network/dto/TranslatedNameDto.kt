@@ -1,4 +1,4 @@
-package com.example.easyquran.model.dto
+package com.example.network.dto
 
 import com.google.gson.annotations.SerializedName
 

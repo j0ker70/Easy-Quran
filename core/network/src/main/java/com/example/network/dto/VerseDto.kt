@@ -1,6 +1,6 @@
-package com.example.easyquran.model.dto
+package com.example.network.dto
 
-import com.example.easyquran.model.domain.Verse
+import com.example.model.Verse
 import com.google.gson.annotations.SerializedName
 
 data class VerseDto(

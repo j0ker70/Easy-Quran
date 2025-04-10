@@ -22,6 +22,9 @@
       <SelectionState runConfigName="scrollAndNavigate()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="easyquran.core.network">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

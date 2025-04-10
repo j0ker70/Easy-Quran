@@ -1,9 +1,9 @@
 package com.example.easyquran.di
 
-import com.example.easyquran.data.QuranRemoteDataSource
-import com.example.easyquran.data.QuranRemoteDataSourceImpl
 import com.example.easyquran.data.QuranRepository
 import com.example.easyquran.data.QuranRepositoryImpl
+import com.example.network.data.QuranRemoteDataSource
+import com.example.network.data.QuranRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

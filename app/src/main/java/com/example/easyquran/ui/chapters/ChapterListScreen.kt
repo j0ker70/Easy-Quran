@@ -43,10 +43,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.easyquran.R
-import com.example.easyquran.model.domain.Chapter
 import com.example.easyquran.navigation.Route
 import com.example.easyquran.ui.components.CircularProgress
 import com.example.easyquran.ui.theme.EasyQuranTheme
+import com.example.model.Chapter
 
 @Composable
 fun ChapterListScreen(

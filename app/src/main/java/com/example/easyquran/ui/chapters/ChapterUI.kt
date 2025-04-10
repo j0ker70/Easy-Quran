@@ -1,9 +1,9 @@
 package com.example.easyquran.ui.chapters
 
 import androidx.annotation.DrawableRes
-import com.example.easyquran.model.domain.Chapter
 import com.example.easyquran.utils.revelationPlaceIconToString
 import com.example.easyquran.utils.revelationPlaceStringToIcon
+import com.example.model.Chapter
 import kotlinx.serialization.Serializable
 
 @Serializable

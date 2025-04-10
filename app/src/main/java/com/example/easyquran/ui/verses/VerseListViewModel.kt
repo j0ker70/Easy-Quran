@@ -3,9 +3,9 @@ package com.example.easyquran.ui.verses
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easyquran.data.QuranRepository
-import com.example.easyquran.model.domain.Chapter
-import com.example.easyquran.model.domain.ChapterVerse
-import com.example.easyquran.utils.ApiResponse
+import com.example.model.Chapter
+import com.example.model.ChapterVerse
+import com.example.network.utils.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,8 +1,8 @@
-package com.example.easyquran.data
+package com.example.network.data
 
-import com.example.easyquran.model.domain.Chapter
-import com.example.easyquran.model.domain.ChapterVerse
-import com.example.easyquran.utils.ApiResponse
+import com.example.model.Chapter
+import com.example.model.ChapterVerse
+import com.example.network.utils.ApiResponse
 
 interface QuranRemoteDataSource {
 

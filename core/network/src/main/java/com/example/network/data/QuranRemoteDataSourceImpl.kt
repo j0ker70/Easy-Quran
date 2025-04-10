@@ -1,10 +1,10 @@
-package com.example.easyquran.data
+package com.example.network.data
 
-import com.example.easyquran.model.domain.Chapter
-import com.example.easyquran.model.domain.ChapterVerse
-import com.example.easyquran.model.dto.getVerseList
-import com.example.easyquran.model.dto.toChapters
-import com.example.easyquran.utils.ApiResponse
+import com.example.model.Chapter
+import com.example.model.ChapterVerse
+import com.example.network.dto.getVerseList
+import com.example.network.dto.toChapters
+import com.example.network.utils.ApiResponse
 import retrofit2.HttpException
 import javax.inject.Inject
 

@@ -3,7 +3,7 @@ package com.example.easyquran.ui.chapters
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easyquran.data.QuranRepository
-import com.example.easyquran.utils.ApiResponse
+import com.example.network.utils.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
