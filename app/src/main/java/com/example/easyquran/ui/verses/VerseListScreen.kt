@@ -65,8 +65,8 @@ fun VerseListScreen(
         onNavigateUp = { navController.navigateUp() },
         scrollBehavior = scrollBehavior,
         verseListState = verseListState,
-        onLoadNextVerses = {
-            viewModel.loadNextVersesForChapter(
+        loadVerses = {
+            viewModel.loadVerses(
                 chapter = chapterUI.toChapter()
             )
         },
@@ -80,7 +80,7 @@ fun VerseListScaffold(
     onNavigateUp: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     verseListState: VerseListUIState,
-    onLoadNextVerses: () -> Unit,
+    loadVerses: () -> Unit,
     canPaginate: Boolean
 ) {
 
@@ -147,7 +147,7 @@ fun VerseListScaffold(
     ) { innerPadding ->
 
         when (verseListState) {
-            VerseListUIState.Idle -> onLoadNextVerses()
+            VerseListUIState.Idle -> loadVerses()
 
             VerseListUIState.Loading -> CircularProgress(
                 modifier = Modifier
@@ -158,7 +158,7 @@ fun VerseListScaffold(
             is VerseListUIState.Success -> VerseList(
                 versesUI = verseListState.verses,
                 canPaginate = canPaginate,
-                onLoadNextVerses = onLoadNextVerses,
+                onLoadNextVerses = loadVerses,
                 modifier = Modifier.padding(innerPadding)
             )
 
@@ -256,7 +256,7 @@ private fun VerseListScaffoldPreview() {
             scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
             verseListState = VerseListUIState.Success(previewChapterVerseUI),
             canPaginate = false,
-            onLoadNextVerses = {}
+            loadVerses = {}
         )
     }
 }
@@ -269,37 +269,44 @@ internal val previewChapterVerseUI = ChapterVerse(
     canPaginate = false,
     verseList = listOf(
         Verse(
-            verseKey = "1:1",
+            chapterId = 1,
+            verseId = 1,
             arabic = "بِسۡمِ اللهِ الرَّحۡمٰنِ الرَّحِيۡمِ",
             translated = "With the name of Allah, the All-Merciful, the Very-Merciful."
         ),
         Verse(
-            verseKey = "1:2",
+            chapterId = 1,
+            verseId = 2,
             arabic = "اَلۡحَمۡدُ لِلّٰهِ رَبِّ الۡعٰلَمِيۡنَۙ‏",
             translated = "Praise belongs to Allah, the Lord of all the worlds."
         ),
         Verse(
-            verseKey = "1:3",
+            chapterId = 1,
+            verseId = 3,
             arabic = "الرَّحۡمٰنِ الرَّحِيۡمِۙ‏",
             translated = "the All-Merciful, the Very Merciful."
         ),
         Verse(
-            verseKey = "1:4",
+            chapterId = 1,
+            verseId = 4,
             arabic = "مٰلِكِ يَوۡمِ الدِّيۡنِؕ‏",
             translated = "the Master of the Day of Requital."
         ),
         Verse(
-            verseKey = "1:5",
+            chapterId = 1,
+            verseId = 5,
             arabic = "اِيَّاكَ نَعۡبُدُ وَاِيَّاكَ نَسۡتَعِيۡنُؕ‏",
             translated = "You alone do we worship, and from You alone do we seek help."
         ),
         Verse(
-            verseKey = "1:6",
+            chapterId = 1,
+            verseId = 6,
             arabic = "اِهۡدِنَا الصِّرَاطَ الۡمُسۡتَقِيۡمَۙ‏",
             translated = "Take us on the straight path."
         ),
         Verse(
-            verseKey = "1:7",
+            chapterId = 1,
+            verseId = 7,
             arabic = "صِرَاطَ الَّذِيۡنَ اَنۡعَمۡتَ عَلَيۡهِمۡ ۙ‏ غَيۡرِ الۡمَغۡضُوۡبِ عَلَيۡهِمۡ وَلَا الضَّآلِّيۡنَ‏",
             translated = "the path of those on whom You have bestowed Your Grace, not of those who have incurred Your wrath, nor of those who have gone astray."
         )

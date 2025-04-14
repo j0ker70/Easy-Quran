@@ -27,10 +27,6 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"https://api.quran.com/api/v4/\"")
-        }
-        debug {
-            buildConfigField("String", "BASE_URL", "\"https://api.quran.com/api/v4/\"")
         }
         create("benchmark") {
             initWith(buildTypes.getByName("release"))
@@ -48,12 +44,13 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 }
 
 dependencies {
 
+    implementation(projects.core.data)
+    implementation(projects.core.database)
     implementation(projects.core.model)
     implementation(projects.core.network)
 
@@ -69,19 +66,12 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
 
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
 
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.navigation.compose)
-
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
 
     implementation(libs.kotlinx.serialization.json)
 

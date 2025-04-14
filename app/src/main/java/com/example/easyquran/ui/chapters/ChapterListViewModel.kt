@@ -2,12 +2,15 @@ package com.example.easyquran.ui.chapters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.data.util.NetworkMonitor
 import com.example.easyquran.data.QuranRepository
+import com.example.model.Chapter
 import com.example.network.utils.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChapterListViewModel @Inject constructor(
     private val quranRepository: QuranRepository,
+    private val networkMonitor: NetworkMonitor,
     private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -25,14 +29,30 @@ class ChapterListViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             _chapterListState.update { ChapterListUIState.Loading }
 
-            _chapterListState.update {
-                when (val response = quranRepository.getChapters()) {
-                    is ApiResponse.Success -> {
-                        ChapterListUIState.Success(response.data.map { it.toChapterUI() })
-                    }
+            if (networkMonitor.isCurrentlyConnected()) {
+                loadChaptersRemote()
+            } else {
+                loadChaptersLocal()
+            }
+        }
+    }
 
-                    is ApiResponse.Failure -> ChapterListUIState.Failure(response.errorMsg)
+    private suspend fun loadChaptersLocal() {
+        quranRepository.getChaptersLocal().collectLatest { chapters ->
+            _chapterListState.update {
+                ChapterListUIState.Success(chapters.map(Chapter::toChapterUI))
+            }
+        }
+    }
+
+    private suspend fun loadChaptersRemote() {
+        _chapterListState.update {
+            when (val response = quranRepository.getChaptersRemote()) {
+                is ApiResponse.Success -> {
+                    ChapterListUIState.Success(response.data.map { it.toChapterUI() })
                 }
+
+                is ApiResponse.Failure -> ChapterListUIState.Failure(response.errorMsg)
             }
         }
     }
